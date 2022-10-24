@@ -286,7 +286,7 @@ class GiePandasClient(GieRawClient):
 
         if "gas_day" in json_res:
             df.insert(0, "gas_day", json_res["gas_day"], allow_duplicates=True)
-        
+
         if float_cols is not None:
             df_cols = [x for x in float_cols if x in df.columns]
             if df_cols:
