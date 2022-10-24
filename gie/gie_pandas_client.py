@@ -275,7 +275,7 @@ class GiePandasClient(GieRawClient):
         return self._pandas_df_format(json_result, self._FLOATING_COLS)
 
     def _pandas_df_format(
-        self, json_res: object, float_cols: Optional[list] = None
+        self, json_res: Dict, float_cols: Optional[list] = None
     ):
         df = (
             pd.DataFrame(json_res["data"])
