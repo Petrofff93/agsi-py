@@ -2,6 +2,7 @@ import datetime
 from typing import Union, Optional, Dict, Any
 
 import pandas as pd
+import pandas.core.frame
 
 from gie.gie_raw_client import GieRawClient
 from gie.mappings.agsi_company import AGSICompany
@@ -36,7 +37,7 @@ class GiePandasClient(GieRawClient):
         "volume",
     ]
 
-    async def query_agsi_eic_listing(self) -> object:
+    async def query_agsi_eic_listing(self) -> pandas.core.frame.DataFrame:
         """Return all the AGSI EIC(Energy Identification Code) listing.
 
         Returns
@@ -48,7 +49,7 @@ class GiePandasClient(GieRawClient):
         json_result = await super().query_agsi_eic_listing()
         return self._pandas_df_format(json_result)
 
-    async def query_alsi_eic_listing(self) -> object:
+    async def query_alsi_eic_listing(self) -> pandas.core.frame.DataFrame:
         """Return all the ALSI EIC(Energy Identification Code) listing.
 
         Returns
@@ -62,7 +63,7 @@ class GiePandasClient(GieRawClient):
 
     async def query_alsi_news_listing(
         self, news_url_item: Optional[Union[int, str]] = None
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Return all the ALSI news or a specific country news listings.
 
         Returns
@@ -78,7 +79,7 @@ class GiePandasClient(GieRawClient):
 
     async def query_agsi_news_listing(
         self, news_url_item: Optional[Union[int, str]] = None
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Return all the AGSI news or a specific country news listings.
 
         Returns
@@ -99,7 +100,7 @@ class GiePandasClient(GieRawClient):
         end: Optional[Union[datetime.datetime, str]] = None,
         date: Optional[Union[datetime.datetime, str]] = None,
         size: Optional[Union[int, str]] = None,
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Return listing with the AGSI storage data for a specific country or all countries.
 
         Returns
@@ -120,7 +121,7 @@ class GiePandasClient(GieRawClient):
         end: Optional[Union[datetime.datetime, str]] = None,
         date: Optional[Union[datetime.datetime, str]] = None,
         size: Optional[Union[int, str]] = None,
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Return listing with the ALSI storage data for a specific country or all countries.
 
         Returns
@@ -141,7 +142,7 @@ class GiePandasClient(GieRawClient):
         end: Optional[Union[datetime.datetime, str]] = None,
         date: Optional[Union[datetime.datetime, str]] = None,
         size: Optional[Union[int, str]] = None,
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Return listing with the AGSI data for a specific facility storage.
 
         Returns
@@ -166,7 +167,7 @@ class GiePandasClient(GieRawClient):
         end: Optional[Union[datetime.datetime, str]] = None,
         date: Optional[Union[datetime.datetime, str]] = None,
         size: Optional[Union[int, str]] = None,
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Return listing with the ALSI data for a specific facility storage.
 
         Returns
@@ -191,7 +192,7 @@ class GiePandasClient(GieRawClient):
         end: Optional[Union[datetime.datetime, str]] = None,
         date: Optional[Union[datetime.datetime, str]] = None,
         size: Optional[Union[int, str]] = None,
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Returns listing with the AGSI data for a specific company
 
         Returns
@@ -216,7 +217,7 @@ class GiePandasClient(GieRawClient):
         end: Optional[Union[datetime.datetime, str]] = None,
         date: Optional[Union[datetime.datetime, str]] = None,
         size: Optional[Union[int, str]] = None,
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Returns listing with the ALSI data for a specific company
 
         Returns
@@ -240,7 +241,7 @@ class GiePandasClient(GieRawClient):
         start: Optional[Union[datetime.datetime, str]] = None,
         end: Optional[Union[datetime.datetime, str]] = None,
         size: Optional[Union[int, str]] = None,
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Returns the total AGSI unavailability data or a specific country unavailability.
 
         Returns
@@ -260,7 +261,7 @@ class GiePandasClient(GieRawClient):
         start: Optional[Union[datetime.datetime, str]] = None,
         end: Optional[Union[datetime.datetime, str]] = None,
         size: Optional[Union[int, str]] = None,
-    ) -> object:
+    ) -> pandas.core.frame.DataFrame:
         """Returns the total ALSI unavailability data or a specific country unavailability.
 
         Returns
@@ -275,8 +276,8 @@ class GiePandasClient(GieRawClient):
         return self._pandas_df_format(json_result, self._FLOATING_COLS)
 
     def _pandas_df_format(
-        self, json_res: Dict, float_cols: Optional[list] = None
-    ):
+        self, json_res: Any, float_cols: Optional[list] = None
+    ) -> pandas.core.frame.DataFrame:
         df = (
             pd.DataFrame(json_res["data"])
             if "data" in json_res
@@ -285,10 +286,9 @@ class GiePandasClient(GieRawClient):
 
         if "gas_day" in json_res:
             df.insert(0, "gas_day", json_res["gas_day"], allow_duplicates=True)
-
+        
         if float_cols is not None:
             df_cols = [x for x in float_cols if x in df.columns]
-
             if df_cols:
                 df[df_cols] = df[df_cols].astype("float", errors="ignore")
 

@@ -49,7 +49,7 @@ class GieRawClient:
             raise ApiError("API api_type is invalid or missing!")
         self.__api_key = value
 
-    async def query_agsi_eic_listing(self) -> Dict:
+    async def query_agsi_eic_listing(self) -> object:
         """Return all the AGSI EIC (Energy Identification Code) listing.
 
         Returns
@@ -59,7 +59,7 @@ class GieRawClient:
         """
         return await self.fetch(APIType.AGSI, "about?show=listing")
 
-    async def query_alsi_eic_listing(self) -> Dict:
+    async def query_alsi_eic_listing(self) -> object:
         """Return all the AGSI EIC (Energy Identification Code) listing.
 
         Returns
@@ -71,7 +71,7 @@ class GieRawClient:
 
     async def query_alsi_news_listing(
             self, news_url_item: Optional[Union[int, str]] = None
-    ) -> Dict:
+    ) -> object:
         """Return a listing with all the ALSI countries news or a specific country.
 
         Parameters
@@ -90,7 +90,7 @@ class GieRawClient:
 
     async def query_agsi_news_listing(
             self, news_url_item: Optional[Union[int, str]] = None
-    ) -> Dict:
+    ) -> object:
         """Return a listing with all the AGSI countries news or a specific country.
 
         Parameters
@@ -114,7 +114,7 @@ class GieRawClient:
             end: Optional[Union[datetime.datetime, str]] = None,
             date: Optional[Union[datetime.datetime, str]] = None,
             size: Optional[Union[int, str]] = None,
-    ) -> Dict:
+    ) -> object:
         """Return listing with the AGSI storage data for a specific country or all countries.
 
         Parameters
@@ -150,7 +150,7 @@ class GieRawClient:
             end: Optional[Union[datetime.datetime, str]] = None,
             date: Optional[Union[datetime.datetime, str]] = None,
             size: Optional[Union[int, str]] = None,
-    ) -> Dict:
+    ) -> object:
         """Return listing with the ALSI storage data for a specific country or all countries.
 
         Parameters
@@ -185,7 +185,7 @@ class GieRawClient:
             start: Optional[Union[datetime.datetime, str]] = None,
             end: Optional[Union[datetime.datetime, str]] = None,
             size: Optional[Union[int, str]] = None,
-    ) -> Dict:
+    ) -> object:
         """Return all the AGSI unavailability data or the unavailability data for a country.
 
         Parameters
@@ -218,7 +218,7 @@ class GieRawClient:
             start: Optional[Union[datetime.datetime, str]] = None,
             end: Optional[Union[datetime.datetime, str]] = None,
             size: Optional[Union[int, str]] = None,
-    ) -> Dict:
+    ) -> object:
         """Return all the ALSI unavailability data or the unavailability data for a country.
 
         Parameters
@@ -252,7 +252,7 @@ class GieRawClient:
             end: Optional[Union[datetime.datetime, str]] = None,
             date: Optional[Union[datetime.datetime, str]] = None,
             size: Optional[Union[int, str]] = None,
-    ) -> Dict:
+    ) -> object:
         """Return the data for a specific AGSI facility.
 
         Parameters
@@ -287,7 +287,7 @@ class GieRawClient:
             end: Optional[Union[datetime.datetime, str]] = None,
             date: Optional[Union[datetime.datetime, str]] = None,
             size: Optional[Union[int, str]] = None,
-    ) -> Dict:
+    ) -> object:
         """Return the data for a specific ALSI facility.
 
         Parameters
@@ -320,7 +320,7 @@ class GieRawClient:
             end: Optional[Union[datetime.datetime, str]] = None,
             date: Optional[Union[datetime.datetime, str]] = None,
             size: Optional[Union[int, str]] = None,
-    ) -> Dict:
+    ) -> object:
         """Return all the data for a specific AGSI company
 
         Parameters
@@ -354,7 +354,7 @@ class GieRawClient:
             end: Optional[Union[datetime.datetime, str]] = None,
             date: Optional[Union[datetime.datetime, str]] = None,
             size: Optional[Union[int, str]] = None,
-    ) -> Dict:
+    ) -> object:
         """Return all the data for a specific ALSI company
 
         Parameters
