@@ -1,5 +1,4 @@
 import enum
-from typing import Dict
 
 
 class AGSICompany(enum.Enum):
@@ -13,6 +12,12 @@ class AGSICompany(enum.Enum):
         return obj
 
     def __init__(self, _: str, country: str):
+        """Constructor method for AGSICompany Enumerator
+
+        Args:
+            _ (str): _description_
+            country (str): input country string
+        """
         self._country = country
 
     def __str__(self):

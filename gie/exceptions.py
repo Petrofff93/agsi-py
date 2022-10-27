@@ -1,6 +1,13 @@
+"""A file with custom built exceptions"""
+
+
 class NoMatchingDataError(Exception):
-    pass
+    """
+    Custom built exception for No matching data.
+    """
 
 
 class ApiError(Exception):
-    pass
+    """
+    Custom built exception for errors with the API.
+    """

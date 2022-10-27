@@ -1,5 +1,4 @@
 import enum
-from typing import Dict
 
 
 class ALSICompany(enum.Enum):
