@@ -1,5 +1,5 @@
 import datetime
-from typing import Union, Optional, Dict, Any
+from typing import Union, Optional, Any
 
 import pandas as pd
 import pandas.core.frame
@@ -7,7 +7,7 @@ import pandas.core.frame
 from gie.gie_raw_client import GieRawClient
 from gie.mappings.agsi_company import AGSICompany
 from gie.mappings.agsi_country import AGSICountry
-from gie.mappings.agsi_facility import AGSIFacility
+from gie.mappings.agsi_facility import AGSIFacility   
 from gie.mappings.alsi_company import ALSICompany
 from gie.mappings.alsi_country import ALSICountry
 from gie.mappings.alsi_facility import ALSIFacility

@@ -73,3 +73,72 @@ async def main():
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 asyncio.run(main())
 ```
+
+### For more information regarding company codes, facility codes and country codes visit: <https://alsi.gie.eu/#/api>
+
+### Running unit tests
+
+Tell pytest where to look for unit tests and create env for ALSI API key
+
+- On Unix
+
+  ```sh
+  export PYTHONPATH=./roiti-gie-py
+  export API_KEY='<API_KEY>'
+  ```
+
+- On Windows
+
+  ```powershell
+  $env:PYTHONPATH='./roiti-gie-py'
+  $env:API_KEY='<API_KEY>'
+  ```
+
+Run unit tests in coverage mode
+
+```sh
+python -m pytest ./tests --import-mode=append --cov
+```
+
+### Contributing
+
+Pull the repository:
+
+```sh
+git clone https://github.com/ROITI-Ltd/alsi-py.git
+cd ./roiti-gie-py
+```
+
+Set up your working environment:
+
+1. Create virtual environment
+
+   ```sh
+   python -m venv venv
+   ```
+
+2. Activate the virtual environment
+
+   - On UNIX
+
+     ```sh
+     source venv/bin/activate
+     ```
+
+   - On Windows
+
+     ```powershell
+     .\venv\Scripts\activate
+     ```
+
+Install required packages:
+
+```sh
+python -m pip install -r requirements.txt
+```
+
+Bumping the package version after making changes:
+
+```sh
+bumpversion major|minor|patch|build
+```

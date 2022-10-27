@@ -161,3 +161,4 @@ cython_debug/
 pandas_client_test.py
 raw_client_test.py
 client_tests.py
+.vscode/
