@@ -83,14 +83,14 @@ Tell pytest where to look for unit tests and create env for ALSI API key
 - On Unix
 
   ```sh
-  export PYTHONPATH=./roiti-gie-py
+  export PYTHONPATH=./gie-py
   export API_KEY='<API_KEY>'
   ```
 
 - On Windows
 
   ```powershell
-  $env:PYTHONPATH='./roiti-gie-py'
+  $env:PYTHONPATH='./agsi-py'
   $env:API_KEY='<API_KEY>'
   ```
 
@@ -105,8 +105,8 @@ python -m pytest ./tests --import-mode=append --cov
 Pull the repository:
 
 ```sh
-git clone https://github.com/ROITI-Ltd/alsi-py.git
-cd ./roiti-gie-py
+git clone https://github.com/Petrofff93/agsi-py.git
+cd ./agsi-py
 ```
 
 Set up your working environment:
