@@ -61,7 +61,7 @@ jobs:
         run: |
           pip install -r requirements.txt &&
           pip install sphinx sphinx_rtd_theme &&
-          sphinx-apidoc -fo ./docs/ ./alsi/ && 
+          sphinx-apidoc -fo ./docs/ ./roitigie/ && 
           cd ./docs && make html
 
       - name: Init new repo and commit genereated files
