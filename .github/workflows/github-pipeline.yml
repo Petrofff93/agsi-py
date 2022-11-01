@@ -104,4 +104,4 @@ jobs:
       - name: Upload package to PyPI 
         run: |
           pip install twine &&
-          python3 -m twine upload --skip-existing --repository testpypi dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+          python3 -m twine upload --repository testpypi dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
