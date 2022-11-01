@@ -457,13 +457,13 @@ Set up your working environment:
 
 2. Activate the virtual environment
 
-   - On UNIX
+   - On UNIX system
 
      ```sh
      source venv/bin/activate
      ```
 
-   - On Windows
+   - On Windows system
 
      ```powershell
      ./venv/Scripts/activate
