@@ -44,7 +44,7 @@ jobs:
     needs: Lint-And-Test
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: [3.8]
         os: ['ubuntu-latest']
     runs-on: ${{ matrix.os }}
     if: github.ref == 'refs/heads/main'
