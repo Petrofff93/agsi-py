@@ -4,15 +4,15 @@ from typing import Dict, Optional, Union
 
 import aiohttp as aiohttp
 
-from gie.exceptions import ApiError
-from gie.mappings.agsi_company import AGSICompany
-from gie.mappings.agsi_country import AGSICountry
-from gie.mappings.agsi_facility import AGSIFacility
-from gie.mappings.alsi_company import ALSICompany
-from gie.mappings.alsi_country import ALSICountry
-from gie.mappings.alsi_facility import ALSIFacility
-from gie.mappings.api_mappings import APIType
-from gie.lookup_functions import (
+from roitigie.exceptions import ApiError
+from roitigie.mappings.agsi_company import AGSICompany
+from roitigie.mappings.agsi_country import AGSICountry
+from roitigie.mappings.agsi_facility import AGSIFacility
+from roitigie.mappings.alsi_company import ALSICompany
+from roitigie.mappings.alsi_country import ALSICountry
+from roitigie.mappings.alsi_facility import ALSIFacility
+from roitigie.mappings.api_mappings import APIType
+from roitigie.lookup_functions import (
     lookup_country_agsi,
     lookup_country_alsi,
     lookup_facility_agsi,

@@ -5,8 +5,8 @@ import pytest
 import pytest_asyncio
 from decouple import config
 
-from gie.exceptions import ApiError
-from gie.gie_pandas_client import GiePandasClient
+from roitigie.exceptions import ApiError
+from roitigie.gie_pandas_client import GiePandasClient
 
 API_KEY = config("API_KEY")
 
