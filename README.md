@@ -1,4 +1,4 @@
-# gie-py
+# ROITI LTD GIE APP 
 
 Python client for the ALSI/AGSI APIs
 
@@ -9,7 +9,7 @@ Documentation of the client API can be found on: <https://roiti-ltd.github.io/gi
 ### Installation
 
 ```sh
-python -m pip install gie-py
+python -m pip install -i https://test.pypi.org/simple/ roitigie
 ```
 
 ### Usage
@@ -22,7 +22,7 @@ The package is split in two clients:
 ```python
 import asyncio
 
-from gie.gie_pandas_client import GiePandasClient
+from roitigie.gie_pandas_client import GiePandasClient
 from decouple import config
 
 
@@ -83,14 +83,14 @@ Tell pytest where to look for unit tests and create env for ALSI API key
 - On Unix
 
   ```sh
-  export PYTHONPATH=./gie-py
+  export PYTHONPATH=./roitigie
   export API_KEY='<API_KEY>'
   ```
 
 - On Windows
 
   ```powershell
-  $env:PYTHONPATH='./agsi-py'
+  $env:PYTHONPATH='./roitigie'
   $env:API_KEY='<API_KEY>'
   ```
 
@@ -106,7 +106,7 @@ Pull the repository:
 
 ```sh
 git clone https://github.com/Petrofff93/agsi-py.git
-cd ./agsi-py
+cd ./roitigie
 ```
 
 Set up your working environment:
@@ -128,7 +128,7 @@ Set up your working environment:
    - On Windows
 
      ```powershell
-     .\venv\Scripts\activate
+     ./venv/Scripts/activate
      ```
 
 Install required packages:
