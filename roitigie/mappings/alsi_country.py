@@ -2,9 +2,7 @@ import enum
 
 
 class ALSICountry(enum.Enum):
-    """
-    ENUM contains 2 things: code and full name
-    """
+    """Enum representing the code and full name for an ALSI Country."""
 
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)

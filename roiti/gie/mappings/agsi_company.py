@@ -1,8 +1,11 @@
 import enum
+from typing import Dict
 
 
 class AGSICompany(enum.Enum):
-    """Enum representing the code and country for an AGSI Company."""
+    """
+    ENUM containing 2 things about an Area: code, country
+    """
 
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)

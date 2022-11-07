@@ -1,18 +1,18 @@
 import datetime
 import urllib.parse
-from typing import Any, Dict, Optional, Union
+from typing import Dict, Optional, Union
 
 import aiohttp as aiohttp
 
-from roitigie.exceptions import ApiError
-from roitigie.mappings.agsi_company import AGSICompany
-from roitigie.mappings.agsi_country import AGSICountry
-from roitigie.mappings.agsi_facility import AGSIFacility
-from roitigie.mappings.alsi_company import ALSICompany
-from roitigie.mappings.alsi_country import ALSICountry
-from roitigie.mappings.alsi_facility import ALSIFacility
-from roitigie.mappings.api_mappings import APIType
-from roitigie.lookup_functions import (
+from .exceptions import ApiError
+from .mappings.agsi_company import AGSICompany
+from .mappings.agsi_country import AGSICountry
+from .mappings.agsi_facility import AGSIFacility
+from .mappings.alsi_company import ALSICompany
+from .mappings.alsi_country import ALSICountry
+from .mappings.alsi_facility import ALSIFacility
+from .mappings.api_mappings import APIType
+from .mappings.lookup_functions import (
     lookup_country_agsi,
     lookup_country_alsi,
     lookup_facility_agsi,
@@ -23,22 +23,9 @@ from roitigie.lookup_functions import (
 
 
 class GieRawClient:
-    """AGSI/ALSI Raw Client returning raw responses."""
-
-    API_DATE_FORMAT = r"%Y-%m-%d"
-
     def __init__(
-        self, api_key: str, session: Optional[aiohttp.ClientSession] = None
+            self, api_key: str, session: Optional[aiohttp.ClientSession] = None
     ):
-        """_summary_
-
-        Parameters
-        ----------
-        api_key : str
-            _description_
-        session : Optional[aiohttp.ClientSession], optional
-            User supplied aiohttp ClientSession, or create a new one if None, by default None
-        """
         self.api_key = api_key
         self.session = (
             session
@@ -55,33 +42,33 @@ class GieRawClient:
     @api_key.setter
     def api_key(self, value):
         if not value:
-            raise ApiError("Provided API key is invalid, missing, or None!")
+            raise ApiError("API api_type is invalid or missing!")
         self.__api_key = value
 
-    async def query_agsi_eic_listing(self) -> Dict[str, Any]:
-        """Return all the AGSI EIC (Energy Identification Code) listing.
+    async def query_agsi_eic_listing(self):
+        """
 
         Returns
         -------
-            Queries the API and returns the JSON response converted to a Dict.
+            All AGSI EICs (Energy Identification Codes) listing
 
         """
         return await self.fetch(APIType.AGSI, "about?show=listing")
 
-    async def query_alsi_eic_listing(self) -> Dict[str, Any]:
-        """Return all the AGSI EIC (Energy Identification Code) listing.
+    async def query_alsi_eic_listing(self):
+        """
 
         Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            ALL ALSI EICs (Energy Identification Codes) listing
 
         """
         return await self.fetch(APIType.ALSI, "about?show=listing")
 
     async def query_alsi_news_listing(
-        self, news_url_item: Optional[Union[int, str]] = None
-    ) -> Dict[str, Any]:
-        """Return a listing with all the ALSI countries news or a specific country.
+            self, news_url_item: Optional[Union[int, str]] = None
+    ):
+        """
 
         Parameters
         ----------
@@ -90,7 +77,7 @@ class GieRawClient:
 
         Returns
         -------
-           Queries the API and returns the specific data in a json format.
+            All AlSI news listing or a specific country news
 
         """
         return await self.fetch(
@@ -98,9 +85,9 @@ class GieRawClient:
         )
 
     async def query_agsi_news_listing(
-        self, news_url_item: Optional[Union[int, str]] = None
-    ) -> Dict[str, Any]:
-        """Return a listing with all the AGSI countries news or a specific country.
+            self, news_url_item: Optional[Union[int, str]] = None
+    ):
+        """
 
         Parameters
         ----------
@@ -109,7 +96,7 @@ class GieRawClient:
 
         Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            All AGSI news listing or a specific country news
 
         """
         return await self.fetch(
@@ -117,36 +104,32 @@ class GieRawClient:
         )
 
     async def query_country_agsi_storage(
-        self,
-        country: Optional[Union[AGSICountry, str]] = None,
-        start: Optional[Union[datetime.datetime, str]] = None,
-        end: Optional[Union[datetime.datetime, str]] = None,
-        date: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Return listing with the AGSI storage data for a specific country or all countries.
+            self,
+            country: Optional[Union[AGSICountry, str]] = None,
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            date: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
-        country: Optional[Union[AGSICountry, str]] = None,
-            Description
-        start: Optional[Union[datetime.datetime, str]] = None,
-            Description
-        end: Optional[Union[datetime.datetime, str]] = None,
-            Description
-        date: Optional[Union[datetime.datetime, str]] = None,
-            Description
-        size: Optional[Union[int, str]] = None,
-            Description
+            country: Optional[Union[AGSICountry, str]] = None,
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            date: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
 
         Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            Listing for ALL/OR specific country gas storage
         """
-        params = None
-        if country is not None:
-            country_param = lookup_country_agsi(country)
-            params = country_param.get_params()
+        country_param = (
+            lookup_country_agsi(country) if country is not None else ""
+        )
+
+        params = country_param.get_params() if country_param else ""
 
         return await self.fetch(
             APIType.AGSI,
@@ -158,14 +141,14 @@ class GieRawClient:
         )
 
     async def query_country_alsi_storage(
-        self,
-        country: Optional[Union[ALSICountry, str]] = None,
-        start: Optional[Union[datetime.datetime, str]] = None,
-        end: Optional[Union[datetime.datetime, str]] = None,
-        date: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Return listing with the ALSI storage data for a specific country or all countries.
+            self,
+            country: Optional[Union[ALSICountry, str]] = None,
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            date: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
@@ -177,12 +160,13 @@ class GieRawClient:
 
         Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            Listing for ALL/OR specific country gas storage
         """
-        params = None
-        if country is not None:
-            country_param = lookup_country_alsi(country)
-            params = country_param.get_params()
+        country_param = (
+            lookup_country_alsi(country) if country is not None else ""
+        )
+
+        params = country_param.get_params() if country_param else ""
 
         return await self.fetch(
             APIType.AGSI,
@@ -194,13 +178,13 @@ class GieRawClient:
         )
 
     async def query_agsi_unavailability(
-        self,
-        country: Optional[Union[AGSICountry, str]] = None,
-        start: Optional[Union[datetime.datetime, str]] = None,
-        end: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Return all the AGSI unavailability data or the unavailability data for a country.
+            self,
+            country: Optional[Union[AGSICountry, str]] = None,
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
@@ -210,12 +194,13 @@ class GieRawClient:
             size: Optional[Union[int, str]] = None,
             Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            With optional params, returns all the AGSI unavailability
         """
-        params = None
-        if country is not None:
-            country_param = lookup_country_agsi(country)
-            params = country_param.get_params()
+        country_param = (
+            lookup_country_agsi(country) if country is not None else ""
+        )
+
+        params = country_param.get_params() if country_param else ""
 
         return await self.fetch(
             APIType.AGSI,
@@ -227,13 +212,13 @@ class GieRawClient:
         )
 
     async def query_alsi_unavailability(
-        self,
-        country: Optional[Union[ALSICountry, str]] = None,
-        start: Optional[Union[datetime.datetime, str]] = None,
-        end: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Return all the ALSI unavailability data or the unavailability data for a country.
+            self,
+            country: Optional[Union[ALSICountry, str]] = None,
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
@@ -243,12 +228,13 @@ class GieRawClient:
             size: Optional[Union[int, str]] = None,
             Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            With optional params, returns all the ALSI unavailability
         """
-        params = None
-        if country is not None:
-            country_param = lookup_country_alsi(country)
-            params = country_param.get_params()
+        country_param = (
+            lookup_country_alsi(country) if country is not None else ""
+        )
+
+        params = country_param.get_params() if country_param else ""
 
         return await self.fetch(
             APIType.ALSI,
@@ -260,14 +246,14 @@ class GieRawClient:
         )
 
     async def query_agsi_facility_storage(
-        self,
-        facility_name: Union[AGSIFacility, str],
-        start: Optional[Union[datetime.datetime, str]] = None,
-        end: Optional[Union[datetime.datetime, str]] = None,
-        date: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Return the data for a specific AGSI facility.
+            self,
+            facility_name: Union[AGSIFacility, str],
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            date: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
@@ -279,7 +265,7 @@ class GieRawClient:
 
         Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            The data for a specific AGSI Facility
         """
         facility_param = lookup_facility_agsi(facility_name)
 
@@ -295,14 +281,14 @@ class GieRawClient:
         )
 
     async def query_alsi_facility_storage(
-        self,
-        facility_name: Union[ALSIFacility, str],
-        start: Optional[Union[datetime.datetime, str]] = None,
-        end: Optional[Union[datetime.datetime, str]] = None,
-        date: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Return the data for a specific ALSI facility.
+            self,
+            facility_name: Union[ALSIFacility, str],
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            date: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
@@ -314,7 +300,7 @@ class GieRawClient:
 
         Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            The data for a specific ALSI Facility
         """
         facility_param = lookup_facility_alsi(facility_name)
         params = facility_param.get_params()
@@ -328,14 +314,14 @@ class GieRawClient:
         )
 
     async def query_agsi_company(
-        self,
-        company_name: Union[AGSICompany, str],
-        start: Optional[Union[datetime.datetime, str]] = None,
-        end: Optional[Union[datetime.datetime, str]] = None,
-        date: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Return all the data for a specific AGSI company
+            self,
+            company_name: Union[AGSICompany, str],
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            date: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
@@ -347,7 +333,7 @@ class GieRawClient:
 
         Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            The data for a specific AGSI company
         """
         company_param = lookup_agsi_company(company_name)
         params = company_param.get_params()
@@ -362,14 +348,14 @@ class GieRawClient:
         )
 
     async def query_alsi_company(
-        self,
-        company_name: Union[ALSICompany, str],
-        start: Optional[Union[datetime.datetime, str]] = None,
-        end: Optional[Union[datetime.datetime, str]] = None,
-        date: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Return all the data for a specific ALSI company
+            self,
+            company_name: Union[ALSICompany, str],
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            date: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
@@ -381,7 +367,7 @@ class GieRawClient:
 
         Returns
         -------
-            Queries the API and returns the specific data in a json format.
+            The data for a specific ALSI company
         """
         company_param = lookup_alsi_company(company_name)
         params = company_param.get_params()
@@ -395,17 +381,17 @@ class GieRawClient:
         )
 
     async def fetch(
-        self,
-        api_type: Union[APIType, str],
-        endpoint: Optional[str] = None,
-        params: Optional[Dict[str, str]] = None,
-        news_url_item: Optional[Union[int, str]] = None,
-        start: Optional[datetime.datetime] = None,
-        end: Optional[datetime.datetime] = None,
-        date: Optional[Union[datetime.datetime, str]] = None,
-        size: Optional[Union[int, str]] = None,
-    ) -> Dict[str, Any]:
-        """Builds the URL and sends requests to the API.
+            self,
+            api_type: Union[APIType, str],
+            endpoint: Optional[str] = None,
+            params: Optional[Dict[str, str]] = None,
+            news_url_item: Optional[Union[int, str]] = None,
+            start: Optional[Union[datetime.datetime, str]] = None,
+            end: Optional[Union[datetime.datetime, str]] = None,
+            date: Optional[Union[datetime.datetime, str]] = None,
+            size: Optional[Union[int, str]] = None,
+    ):
+        """
 
         Parameters
         ----------
@@ -420,12 +406,13 @@ class GieRawClient:
 
         Returns
         -------
-            Returns the desired data according to the pointed params.
+            Abstract get method which parses our params and builds the URL
+            for a client request method.
         """
         _params = {
             "url": news_url_item,
-            "from": start.strftime(self.API_DATE_FORMAT) if start is not None else None,
-            "to": end.strftime(self.API_DATE_FORMAT) if end is not None else None,
+            "from": start,
+            "to": end,
             "date": date,
             "size": size,
         }
@@ -441,8 +428,8 @@ class GieRawClient:
         final_params = {k: v for k, v in _params.items() if v is not None}
 
         async with self.session.get(
-            final_url,
-            params=final_params,
+                final_url,
+                params=final_params,
         ) as resp:
             return await resp.json()
 
@@ -450,3 +437,4 @@ class GieRawClient:
         """Close the session."""
         if self.session:
             await self.session.close()
+

@@ -2,12 +2,10 @@
 
 
 class NoMatchingDataError(Exception):
-    """
-    Custom built exception for No matching data.
-    """
+    """Custom built exception for No matching data."""
+    pass
 
 
 class ApiError(Exception):
-    """
-    Custom built exception for errors with the API.
-    """
+    """Custom built exception for errors with the API."""
+    pass

@@ -3,7 +3,7 @@ from typing import Dict
 
 
 class AGSIFacility(enum.Enum):
-    """Enum representing the code, country, and company for an AGSI Facility."""
+    """Enum containing 3 things about an Area: code, country, code company"""
 
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)

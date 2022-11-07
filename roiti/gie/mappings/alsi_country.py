@@ -1,8 +1,10 @@
 import enum
 
 
-class AGSICountry(enum.Enum):
-    """Enum representing the code and full name for an AGSI Country."""
+class ALSICountry(enum.Enum):
+    """
+    ENUM contains 2 things: code and full name
+    """
 
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)
@@ -28,26 +30,13 @@ class AGSICountry(enum.Enum):
             "country": self.code,
         }
 
-    AT = "AT", "Austria"
     BE = "BE", "Belgium"
-    BG = "BG", "Bulgaria"
     HR = "HR", "Croatia"
-    CZ = "CZ", "Czech Republic"
-    DK = "DK", "Denmark"
     FR = "FR", "France"
-    DE = "DE", "Germany"
-    HU = "HU", "Hungary"
-    IE = "IE", "Ireland"
+    GR = "GR", "Greece"
     IT = "IT", "Italy"
-    LV = "LV", "Latvia"
+    LT = "LT", "Lithuania"
     NL = "NL", "Netherlands"
     PL = "PL", "Poland"
     PT = "PT", "Portugal"
-    RO = "RO", "Romania"
-    SK = "SK", "Slovakia"
     ES = "ES", "Spain"
-    SE = "SE", "Sweden"
-    GB_pre = "GB", "United Kingdom (Pre-Brexit)"
-    RS = "RS", "Serbia"
-    UA = "UA", "Ukraine"
-    GB = "GB*", "United Kingdom (Post-Brexit)"
