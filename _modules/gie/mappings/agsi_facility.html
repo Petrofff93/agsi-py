@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gie.mappings.agsi_facility &mdash; Roiti Gie 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Roiti Gie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">gie</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Roiti Gie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gie.mappings.agsi_facility</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gie.mappings.agsi_facility</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">enum</span>
+
+
+<div class="viewcode-block" id="AGSIFacility"><a class="viewcode-back" href="../../../gie.mappings.html#gie.mappings.agsi_facility.AGSIFacility">[docs]</a><span class="k">class</span> <span class="nc">AGSIFacility</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Enum containing 3 things about an Area: code, country, code company&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_value_</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">country</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">company</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_country</span> <span class="o">=</span> <span class="n">country</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_company</span> <span class="o">=</span> <span class="n">company</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_company</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">country</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_country</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+<div class="viewcode-block" id="AGSIFacility.get_params"><a class="viewcode-back" href="../../../gie.mappings.html#gie.mappings.agsi_facility.AGSIFacility.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="p">,</span>
+            <span class="s2">&quot;company&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">company</span><span class="p">,</span>
+            <span class="s2">&quot;facility&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+    <span class="n">ugs_haidach_astora</span> <span class="o">=</span> <span class="s2">&quot;21W000000000078N&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001160J&quot;</span>
+    <span class="n">ugs_haidach_gsa</span> <span class="o">=</span> <span class="s2">&quot;25W-SPHAID-GAZ-M&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span><span class="p">,</span> <span class="s2">&quot;25X-GSALLC-----E&quot;</span>
+    <span class="n">vgs_omv_tallesbrunn</span> <span class="o">=</span> <span class="s2">&quot;21W000000000081Y&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span><span class="p">,</span> <span class="s2">&quot;25X-OMVGASSTORA5&quot;</span>
+    <span class="n">rag_puchkirchen_haag</span> <span class="o">=</span> <span class="s2">&quot;21W000000000079L&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span><span class="p">,</span> <span class="s2">&quot;23X----100225-1C&quot;</span>
+    <span class="n">ugs_7_fields_uniper</span> <span class="o">=</span> <span class="s2">&quot;21W000000000057V&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001127H&quot;</span>
+    <span class="n">ugs_loenhout</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000102A&quot;</span><span class="p">,</span> <span class="s2">&quot;BE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-BE-A-A0A0A-Y&quot;</span>
+    <span class="n">ugs_chiren</span> <span class="o">=</span> <span class="s2">&quot;21W000000000031C&quot;</span><span class="p">,</span> <span class="s2">&quot;BG&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-BG-A-A0A0A-C&quot;</span>
+    <span class="n">ugs_okoli</span> <span class="o">=</span> <span class="s2">&quot;21W000000000077P&quot;</span><span class="p">,</span> <span class="s2">&quot;HR&quot;</span><span class="p">,</span> <span class="s2">&quot;31X-PSP-OSS-HR-D&quot;</span>
+    <span class="n">ugs_uhrice</span> <span class="o">=</span> <span class="s2">&quot;21W000000000075T&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span><span class="p">,</span> <span class="s2">&quot;27XG-MNDGS-CZ--R&quot;</span>
+    <span class="n">ugs_damborice</span> <span class="o">=</span> <span class="s2">&quot;21W000000000102F&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span><span class="p">,</span> <span class="s2">&quot;27X-MORAVIAGS--E&quot;</span>
+    <span class="n">vgs_rwe_haje</span> <span class="o">=</span> <span class="s2">&quot;21W000000000076R&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span><span class="p">,</span> <span class="s2">&quot;27XG-RWE-GAS-STI&quot;</span>
+    <span class="n">ugs_dolni_bojanovice</span> <span class="o">=</span> <span class="s2">&quot;21W000000000074V&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span><span class="p">,</span> <span class="s2">&quot;27X-SPPSTORAGE-R&quot;</span>
+    <span class="n">vgs_gsd_lille_torup_stenlille</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;45W000000000112V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DK&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X000000001104T&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">vgs_saline_tersanne_etrez_manosque</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;21W000000000084S&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;FR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X000000001083B&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">vgs_sediane_saintilliers</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000710&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001083B&quot;</span>
+    <span class="n">vgs_sediane_b_gournay</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000702&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001083B&quot;</span>
+    <span class="n">vgs_serene_atlantique_chemery</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;63W197197128864M&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;FR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X000000001083B&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">vgs_serene_nord_trois_fontaines_labbaye</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;21W000000000073X&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;FR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X000000001083B&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">vgs_lussagnet_terega</span> <span class="o">=</span> <span class="s2">&quot;21W000000000068Q&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-FR-B-A0A0A-J&quot;</span>
+    <span class="n">ugs_jemgum_h_astora</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001148&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001160J&quot;</span>
+    <span class="n">ugs_rehden</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000271O&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001160J&quot;</span>
+    <span class="n">vsp_nord_rehden_jemgum</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001261&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001160J&quot;</span>
+    <span class="n">ugs_wolfersberg</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000184&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;37X0000000000151&quot;</span>
+    <span class="n">ugs_berlin</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001083&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;37X0000000000224&quot;</span>
+    <span class="n">vgs_ugs_etzel_edf</span> <span class="o">=</span> <span class="s2">&quot;37W000000000003M&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;37X000000000152S&quot;</span>
+    <span class="n">vgs_ugs_etzel_enbw</span> <span class="o">=</span> <span class="s2">&quot;11W0-0000-0432-M&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;11X0-0000-0667-8&quot;</span>
+    <span class="n">ugs_enschede_epe_eneco</span> <span class="o">=</span> <span class="s2">&quot;21W000000000012G&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000010849&quot;</span>
+    <span class="n">ugs_frankenthal</span> <span class="o">=</span> <span class="s2">&quot;37Z0000000034538&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;**TOBEPROVIDED**&quot;</span>
+    <span class="n">ugs_etzel_egl_equinor_storage_deutschland</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;21W000000000100J&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X000000001368W&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ugs_katharina</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000281&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001297T&quot;</span>
+    <span class="n">ugs_etzel_ekb</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000291I&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001080H&quot;</span>
+    <span class="n">ewe_h</span> <span class="o">=</span> <span class="s2">&quot;37W000000000002O&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011756&quot;</span>
+    <span class="n">ugs_ewe_l</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001075&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011756&quot;</span>
+    <span class="n">ugs_jemgum_h_ewe</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000508&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011756&quot;</span>
+    <span class="n">ugs_nuttermoor_h_2</span> <span class="o">=</span> <span class="s2">&quot;21W000000000104B&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011756&quot;</span>
+    <span class="n">ugs_nuttermoor_h_3</span> <span class="o">=</span> <span class="s2">&quot;21W000000000103D&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011756&quot;</span>
+    <span class="n">ugs_nuttermoor_l_gud</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001067&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011756&quot;</span>
+    <span class="n">ugs_rudersdorf_h</span> <span class="o">=</span> <span class="s2">&quot;21W000000000048W&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011756&quot;</span>
+    <span class="n">ugs_kraak</span> <span class="o">=</span> <span class="s2">&quot;21W000000000020H&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013805&quot;</span>
+    <span class="n">ugs_epe_kge</span> <span class="o">=</span> <span class="s2">&quot;21W000000000097J&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001140P&quot;</span>
+    <span class="n">ugs_etzel_ese_met</span> <span class="o">=</span> <span class="s2">&quot;21W000000000055Z&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;37X000000000047P&quot;</span>
+    <span class="n">ugs_reckrod</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000540&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;37X000000000047P&quot;</span>
+    <span class="n">vgs_zone_mnd_esg_ugs_stockstadt</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;37Y000000000386Q&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;37X000000000042Z&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ugs_eschenfelden_nergie</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000321Z&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;11XNERGIE------1&quot;</span>
+    <span class="n">ugs_inzenham_west</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000192&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011748&quot;</span>
+    <span class="n">ugs_enschede_epe_nuon</span> <span class="o">=</span> <span class="s2">&quot;21W000000000005D&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;37X0000000000119&quot;</span>
+    <span class="n">ugs_etzel_ese_omv</span> <span class="o">=</span> <span class="s2">&quot;21W000000000056X&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;25X-OMVGASSTORA5&quot;</span>
+    <span class="n">innexpool_rwegsw</span> <span class="o">=</span> <span class="s2">&quot;21W000000000121B&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001262B&quot;</span>
+    <span class="n">ugs_epe_l_rwegsw</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000532&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001262B&quot;</span>
+    <span class="n">ugs_epe_nl_rwegswest</span> <span class="o">=</span> <span class="s2">&quot;21W000000000003H&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001262B&quot;</span>
+    <span class="n">ugs_kalle_rwegswest</span> <span class="o">=</span> <span class="s2">&quot;21W000000000004F&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001262B&quot;</span>
+    <span class="n">ugs_stassfurt_rwegswest</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000265&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001262B&quot;</span>
+    <span class="n">ugs_ronnenberg_empelde</span> <span class="o">=</span> <span class="s2">&quot;21Z0000000004002&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;11XSWHANNOVERAG3&quot;</span>
+    <span class="n">ugs_fronhofen</span> <span class="o">=</span> <span class="s2">&quot;21W000000000091V&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001072G&quot;</span>
+    <span class="n">ugs_harsefeld</span> <span class="o">=</span> <span class="s2">&quot;21W000000000092T&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001072G&quot;</span>
+    <span class="n">ugs_lesum</span> <span class="o">=</span> <span class="s2">&quot;21W000000000090X&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001072G&quot;</span>
+    <span class="n">ugs_peckensen</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000273&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001072G&quot;</span>
+    <span class="n">ugs_schmidhausen</span> <span class="o">=</span> <span class="s2">&quot;21W000000000089I&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001072G&quot;</span>
+    <span class="n">ugs_uelsen</span> <span class="o">=</span> <span class="s2">&quot;21W000000000093R&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001072G&quot;</span>
+    <span class="n">ugs_bremen_lesum_swb</span> <span class="o">=</span> <span class="s2">&quot;21W000000000090X&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;11XSWB-BREMEN--I&quot;</span>
+    <span class="n">ugs_kiel_ronne</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001164&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;37X000000000051Y&quot;</span>
+    <span class="n">ugs_allmenhausen</span> <span class="o">=</span> <span class="s2">&quot;21W000000000030E&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001307F&quot;</span>
+    <span class="n">ugs_etzel_egl_total_etzel_gaslager</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;**TOBEPROVIDED**&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;**TOBEPROVIDED**&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ugs_epe_trianel</span> <span class="o">=</span> <span class="s2">&quot;21W000000000085Q&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001310Q&quot;</span>
+    <span class="n">ugs_bierwang</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000613&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001127H&quot;</span>
+    <span class="n">ugs_breitbrunn</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000605&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001127H&quot;</span>
+    <span class="n">ugs_epe_uniper_h</span> <span class="o">=</span> <span class="s2">&quot;21W000000000066U&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001127H&quot;</span>
+    <span class="n">ugs_epe_uniper_l</span> <span class="o">=</span> <span class="s2">&quot;21W000000000065W&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001127H&quot;</span>
+    <span class="n">ugs_eschenfelden_uniper</span> <span class="o">=</span> <span class="s2">&quot;21W000000000083U&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001127H&quot;</span>
+    <span class="n">ugs_etzel_erdgas_lager_egl</span> <span class="o">=</span> <span class="s2">&quot;21W000000000059R&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001127H&quot;</span>
+    <span class="n">ugs_etzel_ese_uniper_energy_storage</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;21W0000000000168&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X000000001127H&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ugs_krummhorn</span> <span class="o">=</span> <span class="s2">&quot;21W000000000067S&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001127H&quot;</span>
+    <span class="n">ugs_etzel_ese_vgs</span> <span class="o">=</span> <span class="s2">&quot;21W000000000120D&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001138C&quot;</span>
+    <span class="n">ugs_jemgum_h_vgs</span> <span class="o">=</span> <span class="s2">&quot;21W000000000128Y&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001138C&quot;</span>
+    <span class="n">vgs_storage_hub_bernburg</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000427&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001138C&quot;</span>
+    <span class="n">vgs_vtp_storage_gpl</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001091&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001138C&quot;</span>
+    <span class="n">ugs_szoreg_1</span> <span class="o">=</span> <span class="s2">&quot;21W000000000086O&quot;</span><span class="p">,</span> <span class="s2">&quot;HU&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013643&quot;</span>
+    <span class="n">vgs_mfgt_pusztaederics</span> <span class="o">=</span> <span class="s2">&quot;21W000000000087M&quot;</span><span class="p">,</span> <span class="s2">&quot;HU&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013635&quot;</span>
+    <span class="n">ugs_kinsale_southwest</span> <span class="o">=</span> <span class="s2">&quot;47W000000000245J&quot;</span><span class="p">,</span> <span class="s2">&quot;IE&quot;</span><span class="p">,</span> <span class="s2">&quot;47X0000000000584&quot;</span>
+    <span class="n">vgs_edison_stoccaggio_collalto</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;21W000000000095N&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X0000000013651&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ugs_cornegliano</span> <span class="o">=</span> <span class="s2">&quot;59W-IGSTORAGE-0Q&quot;</span><span class="p">,</span> <span class="s2">&quot;IT&quot;</span><span class="p">,</span> <span class="s2">&quot;59X4-IGSTORAGE-T&quot;</span>
+    <span class="n">vgs_stogit_fiume_treste</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000274I&quot;</span><span class="p">,</span> <span class="s2">&quot;IT&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001250I&quot;</span>
+    <span class="n">ugs_incukalns</span> <span class="o">=</span> <span class="s2">&quot;21W000000000113A&quot;</span><span class="p">,</span> <span class="s2">&quot;LV&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001379R&quot;</span>
+    <span class="n">ugs_energystock</span> <span class="o">=</span> <span class="s2">&quot;21W000000000006B&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001057C&quot;</span>
+    <span class="n">ugs_nuttermoor_h_1</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001059&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000011756&quot;</span>
+    <span class="n">ugs_grijpskerk</span> <span class="o">=</span> <span class="s2">&quot;21W000000000001L&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001075A&quot;</span>
+    <span class="n">ugs_norg_langelo</span> <span class="o">=</span> <span class="s2">&quot;21W000000000015A&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001075A&quot;</span>
+    <span class="n">ugs_bergermeer</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000087&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001120V&quot;</span>
+    <span class="n">ugs_alkmaar</span> <span class="o">=</span> <span class="s2">&quot;21W000000000002J&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013732&quot;</span>
+    <span class="n">gsp_historical_data_prior_to_4_feb_2014</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;PRIOR_OSM_000001&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;53XPL000000OSMP5&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ugs_wierzchowice</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000381H&quot;</span><span class="p">,</span> <span class="s2">&quot;PL&quot;</span><span class="p">,</span> <span class="s2">&quot;53XPL000000OSMP5&quot;</span>
+    <span class="n">vgs_gim_kawerna_kosakowo</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000383D&quot;</span><span class="p">,</span> <span class="s2">&quot;PL&quot;</span><span class="p">,</span> <span class="s2">&quot;53XPL000000OSMP5&quot;</span>
+    <span class="n">vgs_gim_sanok_brzeznica</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000382F&quot;</span><span class="p">,</span> <span class="s2">&quot;PL&quot;</span><span class="p">,</span> <span class="s2">&quot;53XPL000000OSMP5&quot;</span>
+    <span class="n">ugs_carrico</span> <span class="o">=</span> <span class="s2">&quot;16ZAS01--------8&quot;</span><span class="p">,</span> <span class="s2">&quot;PT&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013627&quot;</span>
+    <span class="n">ugs_targu_mures</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000309P&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001300T&quot;</span>
+    <span class="n">ugs_balaceanca</span> <span class="o">=</span> <span class="s2">&quot;21Z0000000003111&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-DEPOGAZ-AGSI&quot;</span>
+    <span class="n">ugs_bilciuresti</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000313Y&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-DEPOGAZ-AGSI&quot;</span>
+    <span class="n">ugs_cetatea_de_balta</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000316S&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-DEPOGAZ-AGSI&quot;</span>
+    <span class="n">ugs_ghercesti</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000315U&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-DEPOGAZ-AGSI&quot;</span>
+    <span class="n">ugs_sarmasel</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000314W&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-DEPOGAZ-AGSI&quot;</span>
+    <span class="n">ugs_urziceni</span> <span class="o">=</span> <span class="s2">&quot;21Z0000000003103&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-DEPOGAZ-AGSI&quot;</span>
+    <span class="n">ugs_lab_incl_gajary_baden</span> <span class="o">=</span> <span class="s2">&quot;21W000000000088K&quot;</span><span class="p">,</span> <span class="s2">&quot;SK&quot;</span><span class="p">,</span> <span class="s2">&quot;42X-NAFTA-SK---U&quot;</span>
+    <span class="n">ugs_lab_iv_pozagas</span> <span class="o">=</span> <span class="s2">&quot;21W000000000047Y&quot;</span><span class="p">,</span> <span class="s2">&quot;SK&quot;</span><span class="p">,</span> <span class="s2">&quot;42X-POZAGAS-SK-V&quot;</span>
+    <span class="n">vgs_enagas_serrablo</span> <span class="o">=</span> <span class="s2">&quot;21W000000000032A&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013368&quot;</span>
+    <span class="n">ugs_skallen</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000435&quot;</span><span class="p">,</span> <span class="s2">&quot;SE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-SE-A-A0A0A-F&quot;</span>
+    <span class="n">ugs_rough</span> <span class="o">=</span> <span class="s2">&quot;21W000000000094P&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001022V&quot;</span>
+    <span class="n">ugs_holehouse_farm_storage</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000227R&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;23X-EDFE-------W&quot;</span>
+    <span class="n">ugs_humbly_grove</span> <span class="o">=</span> <span class="s2">&quot;55WHUMBLY1GROVER&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;55XHUMBLYGROVE1H&quot;</span>
+    <span class="n">ugs_hatfield_moors_storage</span> <span class="o">=</span> <span class="s2">&quot;21Z000000000229N&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;23XSCOTTISHPOWEF&quot;</span>
+    <span class="n">ugs_aldbrough_i</span> <span class="o">=</span> <span class="s2">&quot;55WALDBOROUGH00H&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;23X--140207-SSE9&quot;</span>
+    <span class="n">ugs_atwick</span> <span class="o">=</span> <span class="s2">&quot;55WATWICK-SSE00J&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;23X--140207-SSE9&quot;</span>
+    <span class="n">ugs_stublach</span> <span class="o">=</span> <span class="s2">&quot;21W000000000101H&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;48XSTORENGYUK01P&quot;</span>
+    <span class="n">ugs_holford</span> <span class="o">=</span> <span class="s2">&quot;21W000000000112C&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013716&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Roiti LTD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gie.mappings.agsi_company &mdash; Roiti Gie 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Roiti Gie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">gie</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Roiti Gie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gie.mappings.agsi_company</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gie.mappings.agsi_company</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">enum</span>
+
+
+<div class="viewcode-block" id="AGSICompany"><a class="viewcode-back" href="../../../gie.mappings.html#gie.mappings.agsi_company.AGSICompany">[docs]</a><span class="k">class</span> <span class="nc">AGSICompany</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;ENUM containing 2 things about an Area: code, country&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_value_</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">country</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor for the AGSICompany enum</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        country : str</span>
+<span class="sd">            country string parameter needed for the lookup</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_country</span> <span class="o">=</span> <span class="n">country</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">country</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_country</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+<div class="viewcode-block" id="AGSICompany.get_params"><a class="viewcode-back" href="../../../gie.mappings.html#gie.mappings.agsi_company.AGSICompany.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="p">,</span>
+            <span class="s2">&quot;company&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+    <span class="n">astora</span> <span class="o">=</span> <span class="s2">&quot;21X000000001160J&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span>
+    <span class="n">gsa</span> <span class="o">=</span> <span class="s2">&quot;25X-GSALLC-----E&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span>
+    <span class="n">omv_gas_storage</span> <span class="o">=</span> <span class="s2">&quot;25X-OMVGASSTORA5&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span>
+    <span class="n">rag_energy_storage</span> <span class="o">=</span> <span class="s2">&quot;23X----100225-1C&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span>
+    <span class="n">uniper_energy_storage_at</span> <span class="o">=</span> <span class="s2">&quot;21X000000001127H&quot;</span><span class="p">,</span> <span class="s2">&quot;AT&quot;</span>
+    <span class="n">fluxys</span> <span class="o">=</span> <span class="s2">&quot;21X-BE-A-A0A0A-Y&quot;</span><span class="p">,</span> <span class="s2">&quot;BE&quot;</span>
+    <span class="n">bulgartransgaz</span> <span class="o">=</span> <span class="s2">&quot;21X-BG-A-A0A0A-C&quot;</span><span class="p">,</span> <span class="s2">&quot;BG&quot;</span>
+    <span class="n">psp</span> <span class="o">=</span> <span class="s2">&quot;31X-PSP-OSS-HR-D&quot;</span><span class="p">,</span> <span class="s2">&quot;HR&quot;</span>
+    <span class="n">mnd_energy_storage</span> <span class="o">=</span> <span class="s2">&quot;27XG-MNDGS-CZ--R&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span>
+    <span class="n">moravia_gas_storage</span> <span class="o">=</span> <span class="s2">&quot;27X-MORAVIAGS--E&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span>
+    <span class="n">rwe_gas_storage_cz</span> <span class="o">=</span> <span class="s2">&quot;27XG-RWE-GAS-STI&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span>
+    <span class="n">spp_storage</span> <span class="o">=</span> <span class="s2">&quot;27X-SPPSTORAGE-R&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span>
+    <span class="n">gsd</span> <span class="o">=</span> <span class="s2">&quot;21X000000001104T&quot;</span><span class="p">,</span> <span class="s2">&quot;DK&quot;</span>
+    <span class="n">storengy</span> <span class="o">=</span> <span class="s2">&quot;21X000000001083B&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span>
+    <span class="n">terega</span> <span class="o">=</span> <span class="s2">&quot;21X-FR-B-A0A0A-J&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span>
+    <span class="n">astora_germany</span> <span class="o">=</span> <span class="s2">&quot;21X000000001160J&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">bayernugs</span> <span class="o">=</span> <span class="s2">&quot;37X0000000000151&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">bes</span> <span class="o">=</span> <span class="s2">&quot;37X0000000000224&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">edf_gas_deutschland</span> <span class="o">=</span> <span class="s2">&quot;37X000000000152S&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">enbw_etzel_speicher</span> <span class="o">=</span> <span class="s2">&quot;11X0-0000-0667-8&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">eneco_gasspeicher</span> <span class="o">=</span> <span class="s2">&quot;21X0000000010849&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">enovos_storage</span> <span class="o">=</span> <span class="s2">&quot;**TOBEPROVIDED**&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">equinor_storage_deutschland</span> <span class="o">=</span> <span class="s2">&quot;21X000000001368W&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">erdgasspeicher_peissen</span> <span class="o">=</span> <span class="s2">&quot;21X000000001297T&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">ekb</span> <span class="o">=</span> <span class="s2">&quot;21X000000001080H&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">ewe_gasspeicher</span> <span class="o">=</span> <span class="s2">&quot;21X0000000011756&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">hansewerk</span> <span class="o">=</span> <span class="s2">&quot;21X0000000013805&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">kge</span> <span class="o">=</span> <span class="s2">&quot;21X000000001140P&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">met_speicher</span> <span class="o">=</span> <span class="s2">&quot;37X000000000047P&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">mnd_energy_storage_germany</span> <span class="o">=</span> <span class="s2">&quot;37X000000000042Z&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">n_ergie</span> <span class="o">=</span> <span class="s2">&quot;11XNERGIE------1&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">nafta_speicher_inzenham</span> <span class="o">=</span> <span class="s2">&quot;21X0000000011748&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">nuon_epe_gasspeicher</span> <span class="o">=</span> <span class="s2">&quot;37X0000000000119&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">omv_gas_storage_germany</span> <span class="o">=</span> <span class="s2">&quot;25X-OMVGASSTORA5&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">rwe_gas_storage_west</span> <span class="o">=</span> <span class="s2">&quot;21X000000001262B&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">stadtwerke_hannover</span> <span class="o">=</span> <span class="s2">&quot;11XSWHANNOVERAG3&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">storengy_deutschland</span> <span class="o">=</span> <span class="s2">&quot;21X000000001072G&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">swb_vertrieb_bremen</span> <span class="o">=</span> <span class="s2">&quot;11XSWB-BREMEN--I&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">swkiel_speicher</span> <span class="o">=</span> <span class="s2">&quot;37X000000000051Y&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">tep</span> <span class="o">=</span> <span class="s2">&quot;21X000000001307F&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">total_etzel_gaslager</span> <span class="o">=</span> <span class="s2">&quot;**TOBEPROVIDED**&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">trianel_gasspeicher_epe</span> <span class="o">=</span> <span class="s2">&quot;21X000000001310Q&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">uniper_energy_storage</span> <span class="o">=</span> <span class="s2">&quot;21X000000001127H&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">vng_gasspeicher_gmbh</span> <span class="o">=</span> <span class="s2">&quot;21X000000001138C&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span>
+    <span class="n">hexum</span> <span class="o">=</span> <span class="s2">&quot;21X0000000013643&quot;</span><span class="p">,</span> <span class="s2">&quot;HU&quot;</span>
+    <span class="n">hgs</span> <span class="o">=</span> <span class="s2">&quot;21X0000000013635&quot;</span><span class="p">,</span> <span class="s2">&quot;HU&quot;</span>
+    <span class="n">kinsale_energy</span> <span class="o">=</span> <span class="s2">&quot;47X0000000000584&quot;</span><span class="p">,</span> <span class="s2">&quot;IE&quot;</span>
+    <span class="n">edison_stoccaggio</span> <span class="o">=</span> <span class="s2">&quot;21X0000000013651&quot;</span><span class="p">,</span> <span class="s2">&quot;IT&quot;</span>
+    <span class="n">igs</span> <span class="o">=</span> <span class="s2">&quot;59X4-IGSTORAGE-T&quot;</span><span class="p">,</span> <span class="s2">&quot;IT&quot;</span>
+    <span class="n">stogit</span> <span class="o">=</span> <span class="s2">&quot;21X000000001250I&quot;</span><span class="p">,</span> <span class="s2">&quot;IT&quot;</span>
+    <span class="n">conexus_baltic_grid</span> <span class="o">=</span> <span class="s2">&quot;21X000000001379R&quot;</span><span class="p">,</span> <span class="s2">&quot;LV&quot;</span>
+    <span class="n">energystock</span> <span class="o">=</span> <span class="s2">&quot;21X000000001057C&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span>
+    <span class="n">ewe_gasspeicher_nl</span> <span class="o">=</span> <span class="s2">&quot;21X0000000011756&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span>
+    <span class="n">nam</span> <span class="o">=</span> <span class="s2">&quot;21X000000001075A&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span>
+    <span class="n">taqa_gas_storage</span> <span class="o">=</span> <span class="s2">&quot;21X000000001120V&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span>
+    <span class="n">taqa_piek_gas</span> <span class="o">=</span> <span class="s2">&quot;21X0000000013732&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span>
+    <span class="n">gsp</span> <span class="o">=</span> <span class="s2">&quot;53XPL000000OSMP5&quot;</span><span class="p">,</span> <span class="s2">&quot;PL&quot;</span>
+    <span class="n">ren_armazenagem</span> <span class="o">=</span> <span class="s2">&quot;21X0000000013627&quot;</span><span class="p">,</span> <span class="s2">&quot;PT&quot;</span>
+    <span class="n">depomures</span> <span class="o">=</span> <span class="s2">&quot;21X000000001300T&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span>
+    <span class="n">depogaz_ploiesti</span> <span class="o">=</span> <span class="s2">&quot;21X-DEPOGAZ-AGSI&quot;</span><span class="p">,</span> <span class="s2">&quot;RO&quot;</span>
+    <span class="n">nafta</span> <span class="o">=</span> <span class="s2">&quot;42X-NAFTA-SK---U&quot;</span><span class="p">,</span> <span class="s2">&quot;SK&quot;</span>
+    <span class="n">pozagas</span> <span class="o">=</span> <span class="s2">&quot;42X-POZAGAS-SK-V&quot;</span><span class="p">,</span> <span class="s2">&quot;SK&quot;</span>
+    <span class="n">enagas_gts</span> <span class="o">=</span> <span class="s2">&quot;21X0000000013368&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span>
+    <span class="n">swedegas</span> <span class="o">=</span> <span class="s2">&quot;21X-SE-A-A0A0A-F&quot;</span><span class="p">,</span> <span class="s2">&quot;SE&quot;</span>
+    <span class="n">centrica_storage</span> <span class="o">=</span> <span class="s2">&quot;21X000000001022V&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span>
+    <span class="n">edf</span> <span class="o">=</span> <span class="s2">&quot;23X-EDFE-------W&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span>
+    <span class="n">humbly_grove_energy</span> <span class="o">=</span> <span class="s2">&quot;55XHUMBLYGROVE1H&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span>
+    <span class="n">scottish_power</span> <span class="o">=</span> <span class="s2">&quot;23XSCOTTISHPOWEF&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span>
+    <span class="n">sse_gas_storage</span> <span class="o">=</span> <span class="s2">&quot;23X--140207-SSE9&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span>
+    <span class="n">storengy_uk</span> <span class="o">=</span> <span class="s2">&quot;48XSTORENGYUK01P&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span>
+    <span class="n">uniper_energy_storage_ltd</span> <span class="o">=</span> <span class="s2">&quot;21X0000000013716&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Roiti LTD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

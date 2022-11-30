@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gie.mappings.alsi_facility &mdash; Roiti Gie 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Roiti Gie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">gie</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Roiti Gie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gie.mappings.alsi_facility</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gie.mappings.alsi_facility</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">enum</span>
+
+
+<div class="viewcode-block" id="ALSIFacility"><a class="viewcode-back" href="../../../gie.mappings.html#gie.mappings.alsi_facility.ALSIFacility">[docs]</a><span class="k">class</span> <span class="nc">ALSIFacility</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Enum containing 3 things about an Area: code, country, code company&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_value_</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">country</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">company</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_country</span> <span class="o">=</span> <span class="n">country</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_company</span> <span class="o">=</span> <span class="n">company</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_company</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">country</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_country</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+<div class="viewcode-block" id="ALSIFacility.get_params"><a class="viewcode-back" href="../../../gie.mappings.html#gie.mappings.alsi_facility.ALSIFacility.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="p">,</span>
+            <span class="s2">&quot;company&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">company</span><span class="p">,</span>
+            <span class="s2">&quot;facility&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+    <span class="n">zeebrugge</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001245&quot;</span><span class="p">,</span> <span class="s2">&quot;BE&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001006T&quot;</span>
+    <span class="n">bilbao</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000362&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001352A&quot;</span>
+    <span class="n">barcelona</span> <span class="o">=</span> <span class="s2">&quot;21W000000000039X&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001254A&quot;</span>
+    <span class="n">cartagena</span> <span class="o">=</span> <span class="s2">&quot;21W000000000038Z&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001254A&quot;</span>
+    <span class="n">huelva</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000370&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001254A&quot;</span>
+    <span class="n">sagunto</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000354&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span><span class="p">,</span> <span class="s2">&quot;18XTGPRS-12345-G&quot;</span>
+    <span class="n">mugardos</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000338&quot;</span><span class="p">,</span> <span class="s2">&quot;ES&quot;</span><span class="p">,</span> <span class="s2">&quot;18XRGNSA-12345-V&quot;</span>
+    <span class="n">tvb_virtual_balancing_lng_tank</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;18W000000000GVMT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ES&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X0000000013368&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fos_tonkin</span> <span class="o">=</span> <span class="s2">&quot;63W179356656691A&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000010679&quot;</span>
+    <span class="n">montoir_de_bretagne</span> <span class="o">=</span> <span class="s2">&quot;63W631527814486R&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000010679&quot;</span>
+    <span class="n">dunkerque</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000451&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001331I&quot;</span>
+    <span class="n">fos_cavaou</span> <span class="o">=</span> <span class="s2">&quot;63W943693783886F&quot;</span><span class="p">,</span> <span class="s2">&quot;FR&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001070K&quot;</span>
+    <span class="n">isle_of_grain</span> <span class="o">=</span> <span class="s2">&quot;21W000000000099F&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-GB-A-A0A0A-7&quot;</span>
+    <span class="n">south_hook</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000419&quot;</span><span class="p">,</span> <span class="s2">&quot;GB&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013554&quot;</span>
+    <span class="n">revythoussa</span> <span class="o">=</span> <span class="s2">&quot;21W000000000040B&quot;</span><span class="p">,</span> <span class="s2">&quot;GR&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-GR-A-A0A0A-G&quot;</span>
+    <span class="n">krk_fsru</span> <span class="o">=</span> <span class="s2">&quot;31W-0000-G-000-Z&quot;</span><span class="p">,</span> <span class="s2">&quot;HR&quot;</span><span class="p">,</span> <span class="s2">&quot;31X-LNG-HR-----7&quot;</span>
+    <span class="n">panigaglia</span> <span class="o">=</span> <span class="s2">&quot;59W0000000000011&quot;</span><span class="p">,</span> <span class="s2">&quot;IT&quot;</span><span class="p">,</span> <span class="s2">&quot;26X00000117915-0&quot;</span>
+    <span class="n">fsru_olt_offshore_lng_toscana</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;21W0000000000443&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;21X000000001109G&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">porto_levante</span> <span class="o">=</span> <span class="s2">&quot;21W000000000082W&quot;</span><span class="p">,</span> <span class="s2">&quot;IT&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001360B&quot;</span>
+    <span class="n">fsru_independence</span> <span class="o">=</span> <span class="s2">&quot;21W0000000001253&quot;</span><span class="p">,</span> <span class="s2">&quot;LT&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013740&quot;</span>
+    <span class="n">rotterdam_gate</span> <span class="o">=</span> <span class="s2">&quot;21W0000000000079&quot;</span><span class="p">,</span> <span class="s2">&quot;NL&quot;</span><span class="p">,</span> <span class="s2">&quot;21X000000001063H&quot;</span>
+    <span class="n">swinoujscie</span> <span class="o">=</span> <span class="s2">&quot;21W000000000096L&quot;</span><span class="p">,</span> <span class="s2">&quot;PL&quot;</span><span class="p">,</span> <span class="s2">&quot;21X-PL-A-A0A0A-B&quot;</span>
+    <span class="n">sines</span> <span class="o">=</span> <span class="s2">&quot;16WTGNL01------O&quot;</span><span class="p">,</span> <span class="s2">&quot;PT&quot;</span><span class="p">,</span> <span class="s2">&quot;21X0000000013619&quot;</span>
+    <span class="n">eemsenergy_lng</span> <span class="o">=</span> <span class="s2">&quot;52W000000000001W&quot;</span><span class="p">,</span> <span class="s2">&quot;LT&quot;</span><span class="p">,</span> <span class="s2">&quot;52X000000000088H&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Roiti LTD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

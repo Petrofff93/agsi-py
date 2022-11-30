@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gie.gie_raw_client &mdash; Roiti Gie 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Roiti Gie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">gie</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Roiti Gie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gie.gie_raw_client</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gie.gie_raw_client</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">aiohttp</span>
+
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ApiError</span>
+<span class="kn">from</span> <span class="nn">.lookup_functions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">lookup_agsi_company</span><span class="p">,</span>
+    <span class="n">lookup_alsi_company</span><span class="p">,</span>
+    <span class="n">lookup_country_agsi</span><span class="p">,</span>
+    <span class="n">lookup_country_alsi</span><span class="p">,</span>
+    <span class="n">lookup_facility_agsi</span><span class="p">,</span>
+    <span class="n">lookup_facility_alsi</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.mappings.agsi_company</span> <span class="kn">import</span> <span class="n">AGSICompany</span>
+<span class="kn">from</span> <span class="nn">.mappings.agsi_country</span> <span class="kn">import</span> <span class="n">AGSICountry</span>
+<span class="kn">from</span> <span class="nn">.mappings.agsi_facility</span> <span class="kn">import</span> <span class="n">AGSIFacility</span>
+<span class="kn">from</span> <span class="nn">.mappings.alsi_company</span> <span class="kn">import</span> <span class="n">ALSICompany</span>
+<span class="kn">from</span> <span class="nn">.mappings.alsi_country</span> <span class="kn">import</span> <span class="n">ALSICountry</span>
+<span class="kn">from</span> <span class="nn">.mappings.alsi_facility</span> <span class="kn">import</span> <span class="n">ALSIFacility</span>
+<span class="kn">from</span> <span class="nn">.mappings.api_mappings</span> <span class="kn">import</span> <span class="n">APIType</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="GieRawClient"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient">[docs]</a><span class="k">class</span> <span class="nc">GieRawClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;AGSI/ALSI Raw Client which queries the API and returns data&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor method for our client</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        api_key : str</span>
+<span class="sd">            The key needed for accessing the API</span>
+<span class="sd">        session : Optional[aiohttp.ClientSession], optional</span>
+<span class="sd">            User supplied aiohttp ClientSession, or create a new one if None, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">api_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">session</span>
+            <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">(</span>
+                <span class="n">raise_for_status</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x-key&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span><span class="p">}</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">api_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__api_key</span>
+
+    <span class="nd">@api_key</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">api_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ApiError</span><span class="p">(</span><span class="s2">&quot;API key is missing!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__api_key</span> <span class="o">=</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="GieRawClient.query_agsi_eic_listing"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_agsi_eic_listing">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_agsi_eic_listing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return all the AGSI EIC (Energy Identification Code) listing.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding the data</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query AGSI EIC listing started awaiting result..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">APIType</span><span class="o">.</span><span class="n">AGSI</span><span class="p">,</span> <span class="s2">&quot;about?show=listing&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_alsi_eic_listing"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_alsi_eic_listing">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_alsi_eic_listing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return all the AGSI EIC (Energy Identification Code) listing.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding the data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query ALSI EIC listing started awaiting result..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">APIType</span><span class="o">.</span><span class="n">ALSI</span><span class="p">,</span> <span class="s2">&quot;about?show=listing&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_alsi_news_listing"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_alsi_news_listing">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_alsi_news_listing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">news_url_item</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return all the ALSI news or a specific country news listings</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        news_url_item : Optional[Union[int, str]], optional</span>
+<span class="sd">           An integer representing a specific country, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding the data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query ALSI NEWS listing started awaiting result..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">ALSI</span><span class="p">,</span> <span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="n">news_url_item</span><span class="o">=</span><span class="n">news_url_item</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_agsi_news_listing"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_agsi_news_listing">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_agsi_news_listing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">news_url_item</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return all the AGSI news or a specific country news listings</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        news_url_item : Optional[Union[int, str]], optional</span>
+<span class="sd">           An integer representing a specific country, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding the data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query AGSI NEWS listing started awaiting result..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">AGSI</span><span class="p">,</span> <span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="n">news_url_item</span><span class="o">=</span><span class="n">news_url_item</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_country_agsi_storage"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_country_agsi_storage">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_country_agsi_storage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">country</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">AGSICountry</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return listing with the AGSI storage data for</span>
+<span class="sd">           a specific country or all countries</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        country : Optional[Union[ALSICountry, str]], optional</span>
+<span class="sd">            Optional country param, by default None</span>
+<span class="sd">        start : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">           Optional start date param, by default None</span>
+<span class="sd">        end : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional end date param, by default None</span>
+<span class="sd">        date : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">           Optional current date param, by default None</span>
+<span class="sd">        size : Optional[Union[int, str]], optional</span>
+<span class="sd">            Optional result size param, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding queried data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">country</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">country_param</span> <span class="o">=</span> <span class="n">lookup_country_agsi</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">country_param</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query AGSI COUNTRY STORAGE started..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">AGSI</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_country_alsi_storage"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_country_alsi_storage">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_country_alsi_storage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">country</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ALSICountry</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return listing with the ALSI storage data for</span>
+<span class="sd">           a specific country or all countries</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        country : Optional[Union[ALSICountry, str]], optional</span>
+<span class="sd">            Optional country param, by default None</span>
+<span class="sd">        start : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">           Optional start date param, by default None</span>
+<span class="sd">        end : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional end date param, by default None</span>
+<span class="sd">        date : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">           Optional current date param, by default None</span>
+<span class="sd">        size : Optional[Union[int, str]], optional</span>
+<span class="sd">            Optional result size param, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding queried data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">country</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">country_param</span> <span class="o">=</span> <span class="n">lookup_country_alsi</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">country_param</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query ALSI COUNTRY STORAGE started..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">AGSI</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_agsi_unavailability"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_agsi_unavailability">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_agsi_unavailability</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">country</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">AGSICountry</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the total AGSI unavailability data or</span>
+<span class="sd">           a specific country unavailability</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        country : Optional[Union[AGSICountry, str]], optional</span>
+<span class="sd">            Optional country param, by default None</span>
+<span class="sd">        start : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional start date param, by default None</span>
+<span class="sd">        end : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional end date param, by default None</span>
+<span class="sd">        size : Optional[Union[int, str]], optional</span>
+<span class="sd">            Optional result size param, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding queried data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">country</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">country_param</span> <span class="o">=</span> <span class="n">lookup_country_agsi</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">country_param</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query AGSI UNAVAILABILITY started..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">AGSI</span><span class="p">,</span>
+            <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;unavailability&quot;</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_alsi_unavailability"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_alsi_unavailability">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_alsi_unavailability</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">country</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ALSICountry</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the total ALSI unavailability data or</span>
+<span class="sd">           a specific country unavailability</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        country : Optional[Union[AGSICountry, str]], optional</span>
+<span class="sd">            Optional country param, by default None</span>
+<span class="sd">        start : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional start date param, by default None</span>
+<span class="sd">        end : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional end date param, by default None</span>
+<span class="sd">        size : Optional[Union[int, str]], optional</span>
+<span class="sd">            Optional result size param, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding queried data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">country</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">country_param</span> <span class="o">=</span> <span class="n">lookup_country_alsi</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">country_param</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query ALSI UNAVAILABILITY started..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">ALSI</span><span class="p">,</span>
+            <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;unavailability&quot;</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_agsi_facility_storage"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_agsi_facility_storage">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_agsi_facility_storage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">facility_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AGSIFacility</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return listing with the AGSI data for a specific facility storage</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        facility_name : Union[ALSIFacility, str]</span>
+<span class="sd">            The name of the facility to query for</span>
+<span class="sd">        start : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional start date param, by default None</span>
+<span class="sd">        end : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional end date param, by default None</span>
+<span class="sd">        date : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">           Optional current date param, by default None</span>
+<span class="sd">        size : Optional[Union[int, str]], optional</span>
+<span class="sd">            Optional result size param, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding queried data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">facility_param</span> <span class="o">=</span> <span class="n">lookup_facility_agsi</span><span class="p">(</span><span class="n">facility_name</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">facility_param</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query AGSI FACILITY STORAGE started..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">AGSI</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_alsi_facility_storage"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_alsi_facility_storage">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_alsi_facility_storage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">facility_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ALSIFacility</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return listing with the ALSI data for a specific facility storage</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        facility_name : Union[ALSIFacility, str]</span>
+<span class="sd">            The name of the facility to query for</span>
+<span class="sd">        start : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional start date param, by default None</span>
+<span class="sd">        end : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional end date param, by default None</span>
+<span class="sd">        date : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">           Optional current date param, by default None</span>
+<span class="sd">        size : Optional[Union[int, str]], optional</span>
+<span class="sd">            Optional result size param, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding queried data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">facility_param</span> <span class="o">=</span> <span class="n">lookup_facility_alsi</span><span class="p">(</span><span class="n">facility_name</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">facility_param</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query ALSI FACILITY STORAGE started..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">ALSI</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_agsi_company"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_agsi_company">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_agsi_company</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">company_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AGSICompany</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns listing with the AGSI data for a specific company</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        company_name : Union[AGSICompany, str]</span>
+<span class="sd">            The name of the company to query for</span>
+<span class="sd">        start : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional start date param, by default None</span>
+<span class="sd">        end : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional end date param, by default None</span>
+<span class="sd">        date : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">           Optional current date param, by default None</span>
+<span class="sd">        size : Optional[Union[int, str]], optional</span>
+<span class="sd">            Optional result size param, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding queried data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">company_param</span> <span class="o">=</span> <span class="n">lookup_agsi_company</span><span class="p">(</span><span class="n">company_name</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">company_param</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query AGSI COMPANY started..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">AGSI</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.query_alsi_company"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.query_alsi_company">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_alsi_company</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">company_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ALSICompany</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns listing with the ALSI data for a specific company</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        company_name : Union[AGSICompany, str]</span>
+<span class="sd">            The name of the company to query for</span>
+<span class="sd">        start : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional start date param, by default None</span>
+<span class="sd">        end : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">            Optional end date param, by default None</span>
+<span class="sd">        date : Optional[Union[datetime.datetime, str]], optional</span>
+<span class="sd">           Optional current date param, by default None</span>
+<span class="sd">        size : Optional[Union[int, str]], optional</span>
+<span class="sd">            Optional result size param, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Any]</span>
+<span class="sd">            Object holding queried data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">company_param</span> <span class="o">=</span> <span class="n">lookup_alsi_company</span><span class="p">(</span><span class="n">company_name</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">company_param</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Query ALSI COMPANY started..&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+            <span class="n">APIType</span><span class="o">.</span><span class="n">ALSI</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+            <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GieRawClient.fetch"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.fetch">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">api_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">APIType</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">news_url_item</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Builds the URL and sends requests to the API.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            api_type: Union[APIType, str],</span>
+<span class="sd">            endpoint: Optional[str] = None,</span>
+<span class="sd">            params: Optional[Dict[str, Any][str, str]] = None,</span>
+<span class="sd">            news_url_item: Optional[Union[int, str]] = None,</span>
+<span class="sd">            start: Optional[Union[datetime.datetime, str]] = None,</span>
+<span class="sd">            end: Optional[Union[datetime.datetime, str]] = None,</span>
+<span class="sd">            date: Optional[Union[datetime.datetime, str]] = None,</span>
+<span class="sd">            size: Optional[Union[int, str]] = None,</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Returns the desired data according to the pointed params.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">news_url_item</span><span class="p">,</span>
+            <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span>
+            <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">end</span><span class="p">,</span>
+            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+            <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="n">root_url</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">api_type</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_type</span><span class="p">,</span> <span class="n">APIType</span><span class="p">)</span> <span class="k">else</span> <span class="n">api_type</span>
+        <span class="p">)</span>
+
+        <span class="n">final_url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="n">root_url</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">)</span>
+        <span class="n">final_params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">final_url</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">final_params</span><span class="p">,</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;fetching the result..&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GieRawClient.close_session"><a class="viewcode-back" href="../../gie.html#gie.gie_raw_client.GieRawClient.close_session">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">close_session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Close the session.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Roiti LTD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
